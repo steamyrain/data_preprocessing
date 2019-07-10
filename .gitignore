@@ -1,2 +1,5 @@
 # ignore all files and directory inside dataset directory
 dataset/
+
+# ignore venv directory from virtualenv
+venv/
