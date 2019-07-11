@@ -3,3 +3,6 @@ dataset/
 
 # ignore venv directory from virtualenv
 venv/
+
+# ignore .vscode
+.vscode/
