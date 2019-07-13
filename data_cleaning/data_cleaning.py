@@ -1,4 +1,5 @@
 import langid
+import spacy
 from translate import Translator
 
 text = "halo nama saya Reinhard. Saat ini saya sedang membaca buku Ready Player One sambil mendengarkan album How to Pimp a Butterfly oleh Kendrick Lamar"
