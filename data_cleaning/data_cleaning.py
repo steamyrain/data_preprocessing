@@ -24,8 +24,8 @@ def source(texts,targets):
 #         'to_lang':'en'
 #         }
 
-# ### load the installed model "en_core_web_sm"
-# nlp = spacy.load('en_core_web_sm')
+### load the installed model "en_core_web_sm"
+nlp = spacy.load('en_core_web_sm')
 
 # ### check spacy's nlp pipeline :)
 # print(nlp.pipe_names)
