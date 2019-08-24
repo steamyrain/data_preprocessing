@@ -2,7 +2,7 @@ import langid
 import spacy
 from spacy.matcher import PhraseMatcher 
 from spacy.lang.en import English
-from spacy.tokens import Span
+from spacy.tokens import Span,Doc
 import en_core_web_sm ## spacy's english model 
 from translate import Translator
 import pandas as pd
@@ -102,7 +102,12 @@ personality.columns = columnNames
 personality[columnNames] = personality[columnNames].astype(int)
 df = pd.concat([df,personality],axis=1)
 
-DATASET = df['STATUS']
+print(df.head())
+
+STATUS = df['STATUS']
+AUTHID = [{"AUTHID":el} for el in df['#AUTHID']]
+
+FEED = list(zip(list(STATUS),AUTHID))
 
 #Instantiate spacy model 
 # nlp = English()
@@ -112,16 +117,24 @@ nlp = spacy.load('en_core_web_sm')
 matcher = PhraseMatcher(nlp.vocab)
 matcher.add("PROPER_NAME",None,nlp.make_doc("*PROPNAME*"))
 
+#custom pipeline 
 def propname_component(doc):
         matches = matcher(doc)
         spans = [Span(doc,start,end,label="PROPER_NAME")for match_id,start,end in matches]
         doc.ents = list(doc.ents) + spans
         return doc
 
+#add it to the existing pipeline
 nlp.add_pipe(propname_component,after='ner')
-print(nlp.pipe_names)
-buff = []
-for doc in nlp.pipe(DATASET):
-        buff += {doc for ent in doc.ents if ent.label_=="PERSON" or ent.label_=="PROPER_NAME"}
 
-print (buff)
+#disable dependency parser and pos tagger
+nlp.disable_pipes("tagger","parser")
+print(nlp.pipe_names)
+
+Doc.set_extension('AUTHID',default=None)
+
+
+for doc, context in nlp.pipe(FEED,as_tuples=True):
+        doc._.AUTHID = context['AUTHID']
+
+print([doc.text,doc._.AUTHID])
