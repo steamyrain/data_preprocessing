@@ -7,7 +7,7 @@ import en_core_web_sm ## spacy's english model
 from translate import Translator
 import pandas as pd
 
-with open("dataset/mypersonality_final.csv") as f:
+with open("dataset/mypersonality_final.csv",encoding='latin') as f:
         DATA=f.read()
 
 ### sample text
