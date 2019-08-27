@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
+from spacy.lang.en.stop_words import STOP_WORDS
 from wordcloud import WordCloud,STOPWORDS
 
 ### load datest from csv to pandas.dataframe
@@ -103,20 +104,80 @@ for rect,label in zip(rects,labels):
 #pm = pd.melt(personality)
 #print(pm)
 #ax = sns.countplot(data=pm.loc[pm['value']==1],x='variable')
+STOP_WORDS.add("PROPNAME")
+### settings for wordcloud 
+plt.figure(figsize=(40,25))
+subsetOpn = df[df.cOPN=='y']
+textOpn = subsetOpn.STATUS.values
+cloud_OPN = WordCloud(
+        stopwords=STOP_WORDS,
+        background_color='black',
+        collocations=False,
+        width=2500,
+        height=1800
+        ).generate(" ".join(textOpn))
+plt.axis('off')
+plt.title("OPENNESS",fontsize=40)
+plt.imshow(cloud_OPN)
 
 ### settings for wordcloud 
 plt.figure(figsize=(40,25))
-subset = df[df.cOPN=='y']
+subset = df[df.cCON=='y']
 text = subset.STATUS.values
-cloud_OPN = WordCloud(
-        stopwords=STOPWORDS,
+cloud_CON = WordCloud(
+        stopwords=STOP_WORDS,
         background_color='black',
         collocations=False,
         width=2500,
         height=1800
         ).generate(" ".join(text))
 plt.axis('off')
-plt.title("OPENNESS",fontsize=40)
-plt.imshow(cloud_OPN)
+plt.title("CONSCIENTIOUSNESS",fontsize=40)
+plt.imshow(cloud_CON)
+
+### settings for wordcloud 
+plt.figure(figsize=(40,25))
+subset = df[df.cEXT=='y']
+text = subset.STATUS.values
+cloud_EXT = WordCloud(
+        stopwords=STOP_WORDS,
+        background_color='black',
+        collocations=False,
+        width=2500,
+        height=1800
+        ).generate(" ".join(text))
+plt.axis('off')
+plt.title("EXTRAVERSION",fontsize=40)
+plt.imshow(cloud_EXT)
+
+### settings for wordcloud 
+plt.figure(figsize=(40,25))
+subset = df[df.cAGR=='y']
+text = subset.STATUS.values
+cloud_AGR = WordCloud(
+        stopwords=STOP_WORDS,
+        background_color='black',
+        collocations=False,
+        width=2500,
+        height=1800
+        ).generate(" ".join(text))
+plt.axis('off')
+plt.title("AGREEABLENESS",fontsize=40)
+plt.imshow(cloud_AGR)
+
+### settings for wordcloud 
+plt.figure(figsize=(40,25))
+subset = df[df.cNEU=='y']
+text = subset.STATUS.values
+cloud_NEU = WordCloud(
+        stopwords=STOP_WORDS,
+        background_color='black',
+        collocations=False,
+        width=2500,
+        height=1800
+        ).generate(" ".join(text))
+plt.axis('off')
+plt.title("NEUROTICISM",fontsize=40)
+plt.imshow(cloud_NEU)
 
 plt.show()
