@@ -133,8 +133,9 @@ print(nlp.pipe_names)
 
 Doc.set_extension('AUTHID',default=None)
 
-
+buff = []
 for doc, context in nlp.pipe(FEED,as_tuples=True):
-        doc._.AUTHID = context['AUTHID']
+        #doc._.AUTHID = context['AUTHID']
+        buff.append(''.join([token.text for token in doc if not token.is_stop]))
 
-print([doc.text,doc._.AUTHID])
+print(buff)
