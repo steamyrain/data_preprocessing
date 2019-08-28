@@ -1,5 +1,6 @@
 import langid
 import spacy
+import pickle 
 from spacy.matcher import PhraseMatcher 
 from spacy.lang.en import English
 from spacy.tokens import Span,Doc
@@ -7,12 +8,12 @@ import en_core_web_sm ## spacy's english model
 from translate import Translator
 import pandas as pd
 
+### open dataset file (using with statement which is cleaner for exception handling rather than try and finally also ensure proper acquisition and release of resources
 with open("dataset/mypersonality_final.csv",encoding='latin') as f:
         DATA=f.read()
 
 ### sample text
 # texts = ["halo nama saya Reinhard. Saat ini saya sedang membaca buku Ready Player One sambil mendengarkan album How to Pimp a Butterfly oleh Kendrick Lamar"]
-texts = ["hello my name is Reinhard, i'm reading ready player one while listening to Kendrick Lamar's How to Pimp a Butterfly album.","test"]
 def coroutine(func):
     def start(*args, **kwargs):
         cr = func(*args, **kwargs)
@@ -136,6 +137,12 @@ Doc.set_extension('AUTHID',default=None)
 buff = []
 for doc, context in nlp.pipe(FEED,as_tuples=True):
         #doc._.AUTHID = context['AUTHID']
-        buff.append(''.join([token.text for token in doc if not token.is_stop]))
+        buff.append(''.join(['{0}{1}'.format(token.text,token.whitespace_) for token in doc if not token.is_stop]))
 
 print(buff)
+print(len(buff))
+
+with open('dataset/token_stopwords.p','wb') as f:
+    pickle.dump(buff,f)
+
+print("pickled in dataset")
