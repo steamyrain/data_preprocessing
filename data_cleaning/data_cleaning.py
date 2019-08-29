@@ -1,12 +1,12 @@
 import langid
 import spacy
+import en_core_web_sm ## spacy's english model 
 import pickle 
+import pandas as pd
 from spacy.matcher import PhraseMatcher 
 from spacy.lang.en import English
 from spacy.tokens import Span,Doc
-import en_core_web_sm ## spacy's english model 
 from translate import Translator
-import pandas as pd
 
 ### open dataset file (using with statement which is cleaner for exception handling rather than try and finally also ensure proper acquisition and release of resources
 with open("dataset/mypersonality_final.csv",encoding='latin') as f:
@@ -136,13 +136,19 @@ Doc.set_extension('AUTHID',default=None)
 
 buff = []
 for doc, context in nlp.pipe(FEED,as_tuples=True):
-        #doc._.AUTHID = context['AUTHID']
-        buff.append(''.join(['{0}{1}'.format(token.text,token.whitespace_) for token in doc if not token.is_stop]))
+        doc._.AUTHID = context['AUTHID']
+        buff.append(doc)
+        #buff.append(''.join(['{0}{1}'.format(token.text,token.whitespace_) for token in doc if not token.is_stop]))
 
 print(buff)
 print(len(buff))
 
-with open('dataset/token_stopwords.p','wb') as f:
+with open('dataset/doc-with-authid.p','wb') as f:
     pickle.dump(buff,f)
 
 print("pickled in dataset")
+
+#with open('dataset/token_stopwords.p','wb') as f:
+#    pickle.dump(buff,f)
+#
+#print("pickled in dataset")
